@@ -1,0 +1,93 @@
+body {
+    font-family: 'Inter', sans-serif;
+}
+
+html[lang="ar"] body {
+    font-family: 'Amiri', serif;
+}
+
+html[lang="ar"] {
+    direction: rtl;
+}
+
+html[lang="ar"] .text-left {
+    text-align: right;
+}
+
+html[lang="ar"] .flex.items-center.justify-center.mx-auto svg.mr-2 {
+    margin-right: 0;
+    margin-left: 0.5rem;
+}
+
+html[lang="ar"] .list-disc {
+    list-style-position: outside;
+    padding-right: 1.5rem;
+}
+
+html[lang="ar"] .list-disc li {
+    text-align: right;
+}
+
+html[lang="ar"] .choice-button {
+    text-align: right;
+}
+
+.toast {
+    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+    transform: translateY(-20px);
+    opacity: 0;
+}
+
+.toast.show {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+pre {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+.choice-button {
+    transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out;
+}
+
+.choice-button:hover:not(:disabled) {
+    background-color: #3b82f6;
+    transform: scale(1.02);
+}
+
+.choice-button.correct {
+    background-color: #22c55e;
+    color: white;
+}
+
+.choice-button.incorrect {
+    background-color: #ef4444;
+    color: white;
+}
+
+.dark .choice-button {
+    background-color: #374151;
+}
+
+.dark .choice-button:hover:not(:disabled) {
+    background-color: #3b82f6;
+}
+
+.dark .choice-button.correct {
+    background-color: #22c55e;
+}
+
+.dark .choice-button.incorrect {
+    background-color: #ef4444;
+}
+
+.correct {
+    background-color: #16A34A !important; /* Tailwind green-600 */
+    color: white !important;
+}
+.incorrect {
+    background-color: #DC2626 !important; /* Tailwind red-600 */
+    color: white !important;
+}

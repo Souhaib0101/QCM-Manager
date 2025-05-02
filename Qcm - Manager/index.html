@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QCM Portal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-gray-100 dark:bg-gray-900 min-h-screen flex flex-col transition-colors duration-300">
+    <!-- Navigation Bar -->
+    <nav class="bg-white dark:bg-gray-800 shadow-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <svg class="h-8 w-8 text-blue-600 dark:text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+                    </svg>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <select id="languageSelect" class="bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-100 px-3 py-2 rounded-md font-medium focus:outline-none focus:ring-2 focus:ring-blue-500" aria-label="Select language">
+                        <option value="en">🇬🇧 English</option>
+                        <option value="fr">🇫🇷 Français</option>
+                        <option value="ar">🇸🇦 العربية</option>
+                    </select>
+                    <button id="themeToggle" class="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400" aria-label="Toggle dark mode">
+                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="flex-grow">
+        <!-- Import Section -->
+        <section id="importSection" class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div class="text-center mb-10">
+                <h1 class="text-4xl font-bold text-gray-800 dark:text-gray-100 mb-4" data-i18n="title">QCM Portal</h1>
+                <p class="text-lg text-gray-600 dark:text-gray-300" data-i18n="import_prompt">Import a JSON file to start your exam.</p>
+            </div>
+            <div class="bg-white dark:bg-gray-800 rounded-xl p-8 mb-8">
+                <h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-100 mb-4" data-i18n="json_format">JSON Format</h2>
+                <p class="text-gray-600 dark:text-gray-300 mb-4" data-i18n="json_requirements">Your JSON file should contain:</p>
+                <ul class="list-disc list-inside text-gray-600 dark:text-gray-300 mb-4">
+                    <li data-i18n="json_question"><strong>question</strong>: Question text (non-empty).</li>
+                    <li data-i18n="json_choices"><strong>choices</strong>: 4+ unique answer options.</li>
+                    <li data-i18n="json_response"><strong>response</strong> or <strong>responses</strong>: Correct answer(s).</li>
+                    <li data-i18n="json_description"><strong>description</strong>: Explanation of correct choice.</li>
+                </ul>
+                <p class="text-gray-600 dark:text-gray-300 mb-2" data-i18n="example">Example:</p>
+                <pre class="bg-gray-50 dark:bg-gray-700 p-4 rounded-md text-sm text-gray-700 dark:text-gray-200 overflow-x-auto">
+[
+    {
+        "question": "What is the capital of France?",
+        "choices": ["Paris", "London", "Berlin", "Madrid"],
+        "response": ["Paris"],
+        "description": "Paris is the capital city of France."
+    },
+    {
+        "question": "Which planets are gas giants?",
+        "choices": ["Mercury", "Jupiter", "Saturn", "Mars", "Uranus"],
+        "responses": ["Jupiter", "Saturn", "Uranus"],
+        "description": "Jupiter, Saturn, and Uranus are composed mostly of hydrogen and helium."
+    }
+]
+                </pre>
+            </div>
+            <div class="text-center">
+                <button id="importButton" class="bg-blue-600 text-white px-8 py-4 rounded-md font-medium text-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center mx-auto">
+                    <svg class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 0115.9 6M15.9 6a5 5 0 01.88 7.903m-8.88 0V21m0-7l-3 3m0 0l3 3m-3-3h12" />
+                    </svg>
+                    <span id="buttonText" data-i18n="import_button">Import QCM .json</span>
+                    <svg id="loadingSpinner" class="animate-spin h-6 w-6 ml-2 hidden" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                </button>
+            </div>
+        </section>
+
+        <!-- Exam Start Section -->
+        <section id="examStartSection" class="hidden max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div class="text-center mb-10">
+                <h1 class="text-4xl font-bold text-gray-800 dark:text-gray-100 mb-4" data-i18n="exam_title">QCM Exam</h1>
+                <p id="examSummary" class="text-lg text-gray-600 dark:text-gray-300" data-i18n="exam_summary"></p>
+            </div>
+            <div class="bg-white dark:bg-gray-800 rounded-xl p-8 text-center">
+                <button id="startExamButton" class="bg-green-600 text-white px-8 py-4 rounded-md font-medium text-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-colors duration-200 mb-4 flex items-center justify-center mx-auto">
+                    <svg class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <span data-i18n="start_exam">Start Exam</span>
+                </button>
+                <button id="backToImportButton" class="bg-gray-600 text-white px-8 py-4 rounded-md font-medium text-lg hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors duration-200 flex items-center justify-center mx-auto">
+                    <svg class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 0115.9 6M15.9 6a5 5 0 01.88 7.903m-8.88 0V21m0-7l-3 3m0 0l3 3m-3-3h12" />
+                    </svg>
+                    <span data-i18n="import_new">Import New JSON</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- Quiz Section -->
+        <section id="quizSection" class="hidden max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div class="bg-white dark:bg-gray-800 rounded-xl p-8">
+                <div class="flex items-center justify-between mb-6 space-x-4 rtl:space-x-reverse">
+                    <div id="scoreDisplay" class="text-xl font-semibold text-gray-800 dark:text-gray-100 min-w-[100px]"></div>
+                    <div class="flex-grow flex justify-center min-w-[120px]">
+                        <button id="finishExamButton" class="bg-red-600 text-white px-5 py-2 rounded-lg font-medium text-base hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors duration-200 flex items-center" aria-label="Finish exam">
+                            <svg class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                            <span data-i18n="finish_exam">Finish Exam</span>
+                        </button>
+                    </div>
+                    <div id="timerDisplay" class="text-xl font-semibold text-gray-800 dark:text-gray-100 min-w-[100px] text-right rtl:text-left"></div>
+                </div>
+                <div id="progressDisplay" class="text-lg text-gray-600 dark:text-gray-300 mb-6"></div>
+                <div id="questionContainer">
+                    <h3 id="questionText" class="text-2xl font-semibold text-gray-800 dark:text-gray-100 mb-8"></h3>
+                    <div id="choicesContainer" class="grid gap-4 mb-8"></div>
+                    <div id="feedbackContainer" class="hidden">
+                        <p id="feedbackText" class="text-xl font-medium mb-4"></p>
+                        <p id="explanationText" class="text-gray-600 dark:text-gray-300 bg-gray-50 dark:bg-gray-700 p-4 rounded-md"></p>
+                    </div>
+                    <div class="flex justify-center gap-4">
+                        <button id="skipQuestionButton" class="bg-yellow-600 text-white px-8 py-4 rounded-md font-medium text-lg hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2 transition-colors duration-200 mt-6 flex items-center justify-center mx-auto">
+                            <svg class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 9l3 3m0 0l-3 3m3-3H8m13 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <span data-i18n="skip_question">Skip Question</span>
+                        </button>
+                        <button id="nextQuestionButton" class="bg-blue-600 text-white px-8 py-4 rounded-md font-medium text-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors duration-200 mt-6 hidden flex items-center justify-center mx-auto">
+                            <svg class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                            </svg>
+                            <span data-i18n="next_question">Next Question</span>
+                        </button>
+                    </div>
+                </div>
+                <div id="completionContainer" class="hidden">
+                    <h3 class="text-3xl font-bold text-gray-800 dark:text-gray-100 mb-6" data-i18n="exam_completed">Exam Completed!</h3>
+                    <p id="finalScore" class="text-xl text-gray-600 dark:text-gray-300 mb-6"></p>
+                    <div id="summaryContainer" class="text-gray-600 dark:text-gray-300 mb-8"></div>
+                    <div class="flex justify-center gap-6 flex-wrap">
+                        <button id="downloadPdfButton" class="bg-purple-600 text-white px-8 py-4 rounded-md font-medium text-lg hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 transition-colors duration-200 flex items-center">
+                            <svg class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                            </svg>
+                            <span data-i18n="download_results">Download Results</span>
+                        </button>
+                        <button id="restartButton" class="bg-blue-600 text-white px-8 py-4 rounded-md font-medium text-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors duration-200 flex items-center">
+                            <svg class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                            </svg>
+                            <span data-i18n="restart_exam">Restart Exam</span>
+                        </button>
+                        <button id="newImportButton" class="bg-gray-600 text-white px-8 py-4 rounded-md font-medium text-lg hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors duration-200 flex items-center">
+                            <svg class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 0115.9 6M15.9 6a5 5 0 01.88 7.903m-8.88 0V21m0-7l-3 3m0 0l3 3m-3-3h12" />
+                            </svg>
+                            <span data-i18n="import_new">Import New JSON</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Toast Notifications -->
+    <div id="toastContainer" class="fixed top-4 right-4 z-50"></div>
+
+    <script type="module" src="js/main.js"></script>
+</body>
+</html>
