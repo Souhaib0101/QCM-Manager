@@ -1,0 +1,16 @@
+// format of QCM
+
+[
+    {
+        "question": "What is the capital of France?",
+        "choices": ["Paris", "London", "Berlin", "Madrid"],
+        "response": ["Paris"],
+        "description": "Paris is the capital city of France."
+    },
+    {
+        "question": "Which planets are gas giants?",
+        "choices": ["Mercury", "Jupiter", "Saturn", "Mars", "Uranus"],
+        "responses": ["Jupiter", "Saturn", "Uranus"],
+        "description": "Jupiter, Saturn, and Uranus are composed mostly of hydrogen and helium."
+    }
+]
