@@ -51,7 +51,7 @@ This guide explains how to use the **QCM Portal**, a web application for taking 
 ---
 
 ## Tips
-- Ensure your JSON file follows the required format to avoid errors.
+- Ensure your file follows the required format to avoid errors.
 - Use the **Skip Question** button if you’re unsure of an answer.
 - Check your score and time during the quiz to manage your progress.
 
