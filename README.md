@@ -15,7 +15,7 @@ This guide explains how to use the **QCM Portal**, a web application for taking 
 
 ### 3. Import a JSON File
 - On the main page, you’ll see an **Import QCM .json** button.
-- Prepare a JSON file with the following format:
+- Prepare a JSON/Text/... file with the following format:
   ```json
   [
       {
